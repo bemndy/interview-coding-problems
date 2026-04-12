@@ -11,14 +11,23 @@
 
 int main() {
 
-    // c-style arrays with fixed size 
-
-    // std::vector dynamic arrays, most standard way in cpp and like list in python
+    // example of using sets in cpp
+    std::set<std::string> s = {"apple", "banana", "cherry"};
+    s.insert("tomato");
+    s.erase("banana");
+    for (auto i : s) {
+        std::cout << i << std::endl;
+    }
     
-    // different common methods for these arrays;
+    //example of using unordered maps in cpp
+    std::unordered_map<std::string, int> um;
+    um["apple"] = 1;
+    um.insert({"banana", 2});
+    um["cherry"] = 3;
 
-
-
+    for (const auto& pair : um) {
+        std::cout << pair.first << ": " << pair.second << std::endl;
+    }
 
     return 0;
 }

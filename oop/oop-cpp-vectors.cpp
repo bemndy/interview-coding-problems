@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <list>
 /***
  * Common Data Strucutres and Algorithms in OOP C++
  * 
@@ -32,13 +33,13 @@ int main() {
         std::cout << "current string element: " << i << std::endl;
     }
 
-
-
-
-
-
-
-
+    //linked-list 
+    std::list<int> linked_list = {10, 20, 30};
+    linked_list.push_back(40);
+    linked_list.push_front(5);
+    for (auto i : linked_list) {
+        std::cout << "Linked list element: " << i << std::endl;
+    }
 
     return 0;
 }
