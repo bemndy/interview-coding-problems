@@ -1,4 +1,6 @@
-# bemndy-dsa-solutions24
-Data structures and algorithms used in classes @ Notre Dame
-
-Every solution, re-implementation since 2024. Implemented in Kotlin, Java, Python or C/C++. Also contains OOP resources and programming challenge solutions. 
+# interview-coding-problems
+- DSA Implemenations in Kotlin, C, Python
+- OOP/Low-Level problems and solution in C++ and Python
+- CodeSignal notes and solutions
+- Deep-ML solutions
+- Infrastructure live-coding problems and solutions
