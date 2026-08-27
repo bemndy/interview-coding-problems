@@ -40,3 +40,6 @@ a.out
 
 # --- Logs ---
 *.log
+
+# utility repos
+*utils/
