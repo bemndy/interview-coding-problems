@@ -10,22 +10,26 @@ CXXFLAGS = -Wall -Wextra -g -std=c++17
 TARGET = test_minheap
 SRCS   = test_minheap.cpp
 # TODO: derive OBJS from SRCS (hint: substitute .cpp -> .o using $(SRCS:.cpp=.o))
-OBJS   =
+OBJS   = $(SRCS:.cpp=.o)
 
 # TODO: default target. Should depend on $(TARGET).
-all:
+all: $(TARGET)
 
 # TODO: link rule. $(TARGET) depends on $(OBJS); link them with $(CXX) and $(CXXFLAGS).
-$(TARGET):
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
 # TODO: pattern rule to compile a .cpp into a .o.
 # Hint: also depend on minheap.h and minheap.tpp so edits trigger a rebuild.
 %.o: %.cpp minheap.h minheap.tpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 # TODO: run target -- depends on $(TARGET), then executes ./$(TARGET)
-run:
+run: $(TARGET)
+	./$(TARGET)
 
 # TODO: clean target -- removes $(TARGET) and $(OBJS)
 clean:
+	rm -f $(TARGET) $(OBJS)
 
 .PHONY: all run clean

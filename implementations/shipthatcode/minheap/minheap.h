@@ -17,7 +17,6 @@ public:
     void   push(const T &value);
     T      pop();              // removes and returns the min; throws if empty
     const T &top() const;      // peeks the min; throws if empty
-
     bool   empty() const { return data_.empty(); }
     size_t size()  const { return data_.size(); }
 
