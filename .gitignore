@@ -36,10 +36,23 @@ htmlcov/
 # --- OS Generated Files ---
 .DS_Store
 Thumbs.db
-a.out
 
 # --- Logs ---
 *.log
 
-# utility repos
-*utils/
+# --- C / C++ build artifacts ---
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+a.out
+*.dSYM/
+*.gch
+*.out
+
+# Test executables (extensionless siblings of test_*.c / test_*.cpp)
+test_dll
+test_minheap
+test_hashmap
+test_vector
