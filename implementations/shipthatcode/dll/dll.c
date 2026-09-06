@@ -31,22 +31,26 @@ void dll_free(DLL *list)
     // create pointer to current head
     Node *curr = list->head;
 
-    // transverse pointer until we reach null pointer (tail's next, which would be freed, original head) 
+    // transverse pointer until we reach null pointer (tail's next, which would be freed, original head)
     while (curr != NULL) {
+        // save next before freeing curr, since curr is invalid after free()
+        Node *next = curr->next;
+
         // prepare values of struct
         curr->value = 0;
         curr->prev = NULL;
-
-        // create pointer to next node, while preparing pointers in struct to be freed 
-        Node *next = curr->next;
         curr->next = NULL;
 
         // free the current pointer
         free(curr);
 
         // iterate
-        curr = curr->next;
+        curr = next;
     }
+
+    list->head = NULL;
+    list->tail = NULL;
+    list->len = 0;
 }
 
 /*
@@ -63,17 +67,19 @@ int dll_push_front(DLL *list, int value)
 
     // make current node point to corresponding nodes
     new->value = value;
+    new->prev = NULL;
 
     if (list->head) {
         new->next = list->head;
         list->head->prev = new;
         list->head = new;
     } else {
+        new->next = NULL;
         list->head = new;
     }
     if (!list->tail) {
         list->tail = new;
-    } 
+    }
     list->len++;
 
     return 1;
@@ -92,12 +98,14 @@ int dll_push_back(DLL *list, int value)
     if (new == NULL) { return 0; }
 
     new->value = value;
+    new->next = NULL;
 
     if (list->tail) {
         new->prev = list->tail;
         list->tail->next = new;
         list->tail = new;
     } else {
+        new->prev = NULL;
         list->tail = new;
     }
 
@@ -117,22 +125,27 @@ int dll_push_back(DLL *list, int value)
 int dll_pop_front(DLL *list, int *out)
 {
     /* TODO */
-    if (list) {
-        *out = list->head->value;
-    } else { return 0; }
+    if (!list->head) {
+        return 0;
+    }
 
     Node *curr = list->head;
-
-    if (curr->next) {
-        curr->next->prev = list->tail;
+    if (out) {
+        *out = curr->value;
     }
 
     list->head = curr->next;
+    if (list->head) {
+        list->head->prev = NULL;
+    } else {
+        list->tail = NULL;
+    }
+
     curr->prev = NULL;
     curr->next = NULL;
     curr->value = 0;
     free(curr);
-    list->len--; 
+    list->len--;
 
     return 1;
 }
@@ -144,22 +157,27 @@ int dll_pop_front(DLL *list, int *out)
 int dll_pop_back(DLL *list, int *out)
 {
     /* TODO */
-    if (list) {
-        *out = list->tail->value;
-    } else { return 0; }
+    if (!list->tail) {
+        return 0;
+    }
 
     Node *curr = list->tail;
-
-    if (curr->prev) {
-        curr->prev->next = list->head;
+    if (out) {
+        *out = curr->value;
     }
 
     list->tail = curr->prev;
+    if (list->tail) {
+        list->tail->next = NULL;
+    } else {
+        list->head = NULL;
+    }
+
     curr->prev = NULL;
     curr->next = NULL;
     curr->value = 0;
-    free(curr); 
-    list->len--; 
+    free(curr);
+    list->len--;
 
     return 1;
 }
@@ -172,7 +190,18 @@ int dll_pop_back(DLL *list, int *out)
 Node *dll_at(const DLL *list, size_t idx)
 {
     /* TODO */
-    return NULL;
+    if (idx >= list->len) {
+        return NULL;
+    }
+    Node *curr = list->head;
+    size_t counter = 0;
+
+    while (counter != idx) {
+        curr = curr->next;
+        counter++;
+    }
+
+    return idx >= list->len ? NULL : curr;
 }
 
 /*
@@ -183,7 +212,33 @@ Node *dll_at(const DLL *list, size_t idx)
 int dll_insert_at(DLL *list, size_t idx, int value)
 {
     /* TODO */
-    return 0;
+    if (idx == 0) {
+        return dll_push_front(list, value);
+    } else if (idx == list->len) {
+        return dll_push_back(list, value);
+    } else if (idx > list->len) {
+        return 0;
+    }
+
+    Node *curr = list->head;
+    size_t i = 0;
+    while (i < idx) {
+        curr = curr->next;
+        i++;
+    }
+
+    Node *new = (Node*)malloc(sizeof(Node));
+    if (new == NULL) {
+        return 0;
+    }
+    new->value = value;
+    new->prev = curr->prev;
+    new->next = curr;
+    curr->prev->next = new;
+    curr->prev = new;
+    list->len++;
+
+    return 1;
 }
 
 /*
@@ -194,5 +249,31 @@ int dll_insert_at(DLL *list, size_t idx, int value)
 int dll_remove_at(DLL *list, size_t idx, int *out)
 {
     /* TODO */
-    return 0;
+    if (idx >= list->len) {
+        return 0;
+    } else if (idx == 0) {
+        return dll_pop_front(list, out);
+    } else if (idx == list->len - 1) {
+        return dll_pop_back(list, out);
+    }
+
+    Node *curr = list->head;
+    size_t i = 0;
+    while (i < idx) {
+        curr = curr->next;
+        i++;
+    }
+
+    curr->next->prev = curr->prev;
+    curr->prev->next = curr->next;
+    if (out) {
+        *out = curr->value;
+    }
+    curr->prev = NULL;
+    curr->next = NULL;
+    curr->value = 0;
+    free(curr);
+    list->len--;
+
+    return 1;
 }
